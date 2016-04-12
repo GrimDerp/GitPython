@@ -74,7 +74,6 @@ class Repo(object):
     re_hexsha_only = re.compile('^[0-9A-Fa-f]{40}$')
     re_hexsha_shortened = re.compile('^[0-9A-Fa-f]{4,40}$')
     re_author_committer_start = re.compile(r'^(author|committer)')
-    re_tab_full_line = re.compile(r'^\t(.*)$')
 
     # invariants
     # represents the configuration level of a configuration file
@@ -622,8 +621,9 @@ class Repo(object):
                                              message=info['summary'])
                                 commits[sha] = c
                             # END if commit objects needs initial creation
-                            m = self.re_tab_full_line.search(line)
-                            text, = m.groups()
+                            text = line
+                            if text.startswith('\t'):
+                                text = text[1:]
                             blames[-1][0] = c
                             blames[-1][1].append(text)
                             info = {'id': sha}
